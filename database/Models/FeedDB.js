@@ -3,7 +3,7 @@ const onlineDb = require('../../config/keys');
 
 mongoose.connect(onlineDb.mongoURI, { useNewUrlParser: true });
 const db = mongoose.connection;
-mongoose.Promise = global.Promise;
+// mongoose.Promise = global.Promise;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
