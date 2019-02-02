@@ -1,8 +1,86 @@
 /* eslint-disable func-names */
 const faker = require('faker');
+const fs = require('fs');
+const streamToMongoDB = require('stream-to-mongo-db').streamToMongoDB;
+const JSONStream = require('JSONStream');
+const mongoose = require('mongoose');
 
-const db = require('../Models/ScheduleDB.js');
 const FeedDB = require('../Models/FeedDB.js');
+const onlineDb = require('../../config/keys');
+
+
+// const insertRamsFeed = function (num) {
+//   for (let i = 0; i < num; i += 1) {
+//     JSON.stringify(FeedDB.create({
+//       author: `${faker.name.lastName()} ${faker.name.lastName()}`,
+//       authorphoto: `${faker.image.avatar()}`,
+//       title: `${faker.lorem.words()}`,
+//       bigphoto: `https://loremflickr.com/620/400/football?lock=${faker.random.number(1000)}`,
+//       smallphoto: `https://loremflickr.com/1280/720/football?lock=${faker.random.number(100)}`,
+//       newsfeed: `${faker.lorem.paragraph()}`,
+//       videoclip: `${faker.internet.url()}`,
+//       timestamp: `${faker.date.between('2018-11-01', '2019-02-01')}`,
+//     }));
+//     // .then(() => db.disconnect());
+//   }
+// };
+
+const ramsFeed = {
+  author: `${faker.name.lastName()} ${faker.name.lastName()}`,
+  authorphoto: `${faker.image.avatar()}`,
+  title: `${faker.lorem.words()}`,
+  bigphoto: `https://loremflickr.com/620/400/football?lock=${faker.random.number(1000)}`,
+  smallphoto: `https://loremflickr.com/1280/720/football?lock=${faker.random.number(1000)}`,
+  newsfeed: `${faker.lorem.paragraph()}`,
+  videoclip: `${faker.internet.url()}`,
+  timestamp: `${faker.date.between('2018-11-01', '2019-02-01')}`,
+};
+
+const outputDBConfig = { dbURL: 'mongodb://localhost:27017/feed', collection: 'feeds' };
+
+const writeableStream = streamToMongoDB(outputDBConfig);
+
+const file = fs.createWriteStream('./feed.json');
+
+const generateRamsFeed = (num) => {
+  const arr = [];
+  for (let i = 0; i <= num; i += 1) {
+    arr.push(ramsFeed);
+  }
+  file.write(JSON.stringify(arr));
+
+  file.end();
+};
+
+const insertSeedData = () => {
+  generateRamsFeed(10);
+
+  fs.createReadStream('./feed.json')
+    .pipe(JSONStream.parse('*'))
+    .pipe(writeableStream);
+};
+
+insertSeedData();
+
+// }
+
+// const writeRamsFeed = (num) => {
+//   const arr = [];
+//   for (let i = 0; i < num; i += 1) {
+//     arr.push(ramsFeed);
+//   }
+//   return JSON.stringify(arr);
+// };
+
+// const writeStream = fs.createWriteStream('feed.json');
+
+// writeStream.write(writeRamsFeed(2));
+
+// writeStream.on('finish', () => {
+//   console.log('wrote all data to file');
+// });
+
+// writeStream.end();
 
 // const ramsFeed = [{
 //   id: 1,
@@ -1005,22 +1083,3 @@ const FeedDB = require('../Models/FeedDB.js');
 //   videoclip: 'https://google.es/aenean/auctor/gravida/sem/praesent/id.js?nulla=sagittis&nunc=nam&purus=congue&phasellus=risus&in=semper&felis=porta&donec=volutpat&semper=quam&sapien=pede&a=lobortis&libero=ligula&nam=sit&dui=amet&proin=eleifend&leo=pede&odio=libero&porttitor=quis&id=orci&consequat=nullam&in=molestie&consequat=nibh&ut=in&nulla=lectus&sed=pellentesque&accumsan=at&felis=nulla&ut=suspendisse&at=potenti&dolor=cras&quis=in&odio=purus&consequat=eu&varius=magna&integer=vulputate&ac=luctus&leo=cum&pellentesque=sociis&ultrices=natoque&mattis=penatibus&odio=et&donec=magnis&vitae=dis&nisi=parturient&nam=montes&ultrices=nascetur&libero=ridiculus&non=mus&mattis=vivamus',
 //   timestamp: '6:01 PM',
 // }];
-
-
-const insertRamsFeed = function (num) {
-  for (let i = 0; i < num; i += 1) {
-    FeedDB.create({
-      author: `${faker.name.lastName()} ${faker.name.lastName()}`,
-      authorphoto: `${faker.image.avatar()}`,
-      title: `${faker.lorem.words()}`,
-      bigphoto: `https://loremflickr.com/620/400/football?lock=${faker.random.number(1000)}`,
-      smallphoto: `https://loremflickr.com/1280/720/football?lock=${faker.random.number(100)}`,
-      newsfeed: `${faker.lorem.paragraph()}`,
-      videoclip: `${faker.internet.url()}`,
-      timestamp: `${faker.date.between('2018-11-01', '2019-02-01')}`,
-    });
-    // .then(() => db.disconnect());
-  }
-};
-
-insertRamsFeed(100000);
