@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const FeedDB = require('../database/Models/FeedDB.js');
+const faker = require('faker');
+const knex = require('../database/knex.js');
 
 const app = express();
 
@@ -12,15 +13,28 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // feed endpoint
 app.get('/espn/feeds', (req, res) => {
-  FeedDB.find({}, (err, data) => {
-  })
-    .limit(10)
-    .sort({ timestamp: 1 })
+  knex.select().from('feeds').orderBy('timestamp', 'desc').limit(10)
     .then((data) => {
       res.send(data);
-    })
-    .catch((err) => {
-      console.err(err);
+    });
+});
+
+app.post('/feeds', (req, res) => {
+  knex('feeds').insert({
+    author: `${faker.name.lastName()} ${faker.name.lastName()}`,
+    authorphoto: `https://loremflickr.com/320/240/face?lock=${faker.random.number(1000)}`,
+    title: `${faker.lorem.words()}`,
+    bigphoto: `https://loremflickr.com/620/400/football?lock=${faker.random.number(1000)}`,
+    smallphoto: `https://loremflickr.com/1280/720/football?lock=${faker.random.number(1000)}`,
+    newsfeed: `${faker.lorem.paragraph()}`,
+    videoclip: `${faker.internet.url()}`,
+    timestamp: `${faker.date.between('2018-11-01', '2019-02-01')}`,
+  })
+    .then(() => {
+      knex.select().from('feeds').orderBy('timestamp', 'desc').limit(10)
+        .then((data) => {
+          res.send(data);
+        });
     });
 });
 

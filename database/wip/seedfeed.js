@@ -1,12 +1,12 @@
 /* eslint-disable func-names */
-const faker = require('faker');
-const fs = require('fs');
-const streamToMongoDB = require('stream-to-mongo-db').streamToMongoDB;
-const JSONStream = require('JSONStream');
-const mongoose = require('mongoose');
+// const faker = require('faker');
+// const fs = require('fs');
+// const streamToMongoDB = require('stream-to-mongo-db').streamToMongoDB;
+// const JSONStream = require('JSONStream');
+// const mongoose = require('mongoose');
 
-const FeedDB = require('../Models/FeedDB.js');
-const onlineDb = require('../../config/keys');
+// const FeedDB = require('../Models/FeedDB.js');
+// const onlineDb = require('../../config/keys');
 
 
 // const insertRamsFeed = function (num) {
@@ -25,42 +25,42 @@ const onlineDb = require('../../config/keys');
 //   }
 // };
 
-const ramsFeed = {
-  author: `${faker.name.lastName()} ${faker.name.lastName()}`,
-  authorphoto: `${faker.image.avatar()}`,
-  title: `${faker.lorem.words()}`,
-  bigphoto: `https://loremflickr.com/620/400/football?lock=${faker.random.number(1000)}`,
-  smallphoto: `https://loremflickr.com/1280/720/football?lock=${faker.random.number(1000)}`,
-  newsfeed: `${faker.lorem.paragraph()}`,
-  videoclip: `${faker.internet.url()}`,
-  timestamp: `${faker.date.between('2018-11-01', '2019-02-01')}`,
-};
+// const ramsFeed = {
+//   author: `${faker.name.lastName()} ${faker.name.lastName()}`,
+//   authorphoto: `https://loremflickr.com/320/240/face?lock=${faker.random.number(1000)}`,
+//   title: `${faker.lorem.words()}`,
+//   bigphoto: `https://loremflickr.com/620/400/football?lock=${faker.random.number(1000)}`,
+//   smallphoto: `https://loremflickr.com/1280/720/football?lock=${faker.random.number(1000)}`,
+//   newsfeed: `${faker.lorem.paragraph()}`,
+//   videoclip: `${faker.internet.url()}`,
+//   timestamp: `${faker.date.between('2018-11-01', '2019-02-01')}`,
+// };
 
-const outputDBConfig = { dbURL: 'mongodb://localhost:27017/feed', collection: 'feeds' };
+// const outputDBConfig = { dbURL: 'mongodb://localhost:27017/feed', collection: 'feeds' };
 
-const writeableStream = streamToMongoDB(outputDBConfig);
+// const writeableStream = streamToMongoDB(outputDBConfig);
 
-const file = fs.createWriteStream('./feed.json');
+// const file = fs.createWriteStream('./feed.json');
 
-const generateRamsFeed = (num) => {
-  const arr = [];
-  for (let i = 0; i <= num; i += 1) {
-    arr.push(ramsFeed);
-  }
-  file.write(JSON.stringify(arr));
+// const generateRamsFeed = (num) => {
+//   const arr = [];
+//   for (let i = 0; i <= num; i += 1) {
+//     arr.push(ramsFeed);
+//   }
+//   file.write(JSON.stringify(arr));
 
-  file.end();
-};
+//   file.end();
+// };
 
-const insertSeedData = () => {
-  generateRamsFeed(10);
+// const insertSeedData = () => {
+//   generateRamsFeed(10);
 
-  fs.createReadStream('./feed.json')
-    .pipe(JSONStream.parse('*'))
-    .pipe(writeableStream);
-};
+//   fs.createReadStream('./feed.json')
+//     .pipe(JSONStream.parse('*'))
+//     .pipe(writeableStream);
+// };
 
-insertSeedData();
+// insertSeedData();
 
 // }
 
