@@ -26,7 +26,7 @@ app.get('/feeds', (req, res) => {
 
 app.post('/feeds', (req, res) => {
   knex('feeds').insert({
-    author: `${faker.name.lastName()} ${faker.name.lastName()}`,
+    author: 'Casey Shamey',
     authorphoto: 'https://loremflickr.com/320/240/face',
     title: `${faker.lorem.words()}`,
     bigphoto: 'https://loremflickr.com/620/400/football',
@@ -34,13 +34,24 @@ app.post('/feeds', (req, res) => {
     newsfeed: `${faker.lorem.paragraph()}`,
     videoclip: `${faker.internet.url()}`,
     timestamp: `${faker.date.between('2018-11-01', '2019-02-01')}`,
-  });
-  .then(() => {
-    knex.select().from('feeds').orderBy('timestamp', 'desc').limit(10)
-  .then((data) => {
-    res.send(data);
-  });
-  });
+  })
+    .then(() => {
+      res.send('Data inserted');
+    });
+});
+
+app.put('/feeds', (req, res) => {
+  knex('feeds').where({ author: 'Casey Shamey' })
+    .update({ author: 'Casey S Shamey' })
+    .then(() => {
+      res.send('Entry updated.');
+    });
+});
+
+app.delete('/feeds', (req, res) => {
+  knex('feeds').where('author', 'Casey S Shamey')
+    .del();
+  res.send('Deleted entry');
 });
 
 // Serve static assets if in production
