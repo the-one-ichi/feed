@@ -1,4 +1,5 @@
 const faker = require('faker');
+const { performance } = require('perf_hooks');
 
 
 const createFakeFeed = () => ({
@@ -9,16 +10,16 @@ const createFakeFeed = () => ({
   smallphoto: `https://loremflickr.com/1280/720/football?lock=${faker.random.number(1000)}`,
   newsfeed: `${faker.lorem.paragraph()}`,
   videoclip: `${faker.internet.url()}`,
-  timestamp: `${faker.date.between('2018-11-01', '2019-02-01')}`,
+  timestamp: `${faker.date.between('2019-01-02', '2019-03-31')}`,
 
 
 });
 
 exports.seed = async function seed(knex, Promise) {
-  console.log('start', new Date());
+  const t0 = performance.now();
   const batchFeeds = 10000;
   for (let j = 0; j < batchFeeds; j += 1) {
-  // Feeds
+    // Feeds
     const fakeFeeds = [];
     const desiredFakeFeeds = 1000;
     for (let i = 0; i < desiredFakeFeeds; i += 1) {
@@ -27,7 +28,8 @@ exports.seed = async function seed(knex, Promise) {
     await knex('feeds')
       .insert(fakeFeeds);
   }
-  console.log('end', new Date());
+  const t1 = performance.now();
+  console.log(`Upload time: ${(t1 - t0) / 1000 / 60} mins.`);
 };
 
 
