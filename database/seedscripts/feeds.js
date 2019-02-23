@@ -11,8 +11,6 @@ const createFakeFeed = () => ({
   newsfeed: `${faker.lorem.paragraph()}`,
   videoclip: `${faker.internet.url()}`,
   timestamp: `${faker.date.between('2019-01-02', '2019-03-31')}`,
-
-
 });
 
 exports.seed = async function seed(knex, Promise) {
