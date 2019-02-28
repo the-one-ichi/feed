@@ -7,9 +7,8 @@
     "react": "webpack -d --watch",
     "server": "nodemon server/index.js rs",
     "start": "node server/index.js rs",
-    "seedschedule": "node database/seedscripts/seedschedule.js",
-    "seedfeed": "node database/seedscripts/seedfeed.js",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "knex": "knex"
   },
   "author": "Joe Boulos",
   "license": "ISC",
@@ -41,12 +40,17 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
+    "JSONStream": "^1.3.5",
     "cors": "^2.8.5",
+    "faker": "^4.1.0",
+    "knex": "^0.16.3",
     "node-fetch": "^2.3.0",
+    "pg": "^7.8.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "^2.1.1"
+    "react-scripts": "^2.1.1",
+    "stream-to-mongo-db": "^1.6.0"
   }
 }

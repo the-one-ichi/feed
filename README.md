@@ -44,7 +44,7 @@ npm install
 ```sh
 To start the server: npm run server
 To start webpack: npm run react
-To seed the Schedule database: npm run seedschedule
+To seed the Schedule database: knex seed:run
 
 Open service on http://localhost:3005/
 ```

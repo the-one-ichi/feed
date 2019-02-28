@@ -1,27 +1,59 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const FeedDB = require('../database/Models/FeedDB.js');
+const faker = require('faker');
+const knex = require('../database/knex.js');
+const { Client } = require('pg');
 
 const app = express();
+const client = new Client();
+
+// await client.connect()
 
 app.use(cors());
 app.use(express.static(`${__dirname}/../client/dist`));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// const res = await client.query('SELECT * FROM feeds WHERE id = 10000000')
 // feed endpoint
-app.get('/espn/feeds', (req, res) => {
-  FeedDB.find({}, (err, data) => {
-  })
-    .limit(10)
-    .sort({ timestamp: 1 })
+app.get('/feeds', (req, res) => {
+  console.log('test');
+  knex.select().from('feeds').orderBy('timestamp', 'desc').limit(10)
     .then((data) => {
+      console.log(data.timestamp);
       res.send(data);
-    })
-    .catch((err) => {
-      console.err(err);
     });
+});
+
+app.post('/feeds', (req, res) => {
+  knex('feeds').insert({
+    author: 'Casey Shamey',
+    authorphoto: 'https://loremflickr.com/320/240/face',
+    title: `${faker.lorem.words()}`,
+    bigphoto: 'https://loremflickr.com/620/400/football',
+    smallphoto: 'https://loremflickr.com/1280/720/football',
+    newsfeed: `${faker.lorem.paragraph()}`,
+    videoclip: `${faker.internet.url()}`,
+    timestamp: `${faker.date.between('2018-11-01', '2019-02-01')}`,
+  })
+    .then(() => {
+      res.send('Data inserted');
+    });
+});
+
+app.put('/feeds', (req, res) => {
+  knex('feeds').where({ author: 'Casey Shamey' })
+    .update({ author: 'Casey S Shamey' })
+    .then(() => {
+      res.send('Entry updated.');
+    });
+});
+
+app.delete('/feeds', (req, res) => {
+  knex('feeds').where('author', 'Casey S Shamey')
+    .del();
+  res.send('Deleted entry');
 });
 
 // Serve static assets if in production
