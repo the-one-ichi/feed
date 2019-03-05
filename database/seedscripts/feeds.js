@@ -15,11 +15,11 @@ const createFakeFeed = () => ({
 
 exports.seed = async function seed(knex, Promise) {
   const t0 = performance.now();
-  const batchFeeds = 10000;
+  const batchFeeds = 10;
   for (let j = 0; j < batchFeeds; j += 1) {
     // Feeds
     const fakeFeeds = [];
-    const desiredFakeFeeds = 1000;
+    const desiredFakeFeeds = 10;
     for (let i = 0; i < desiredFakeFeeds; i += 1) {
       fakeFeeds.push(createFakeFeed());
     }
